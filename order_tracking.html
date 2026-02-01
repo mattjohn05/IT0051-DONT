@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Tracking - Baguette Bites</title>
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- custom css link -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .tracking-container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .order-success {
+            text-align: center;
+            padding: 30px;
+            background: #d4edda;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .order-success i {
+            font-size: 60px;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        .tracking-steps {
+            position: relative;
+            padding: 40px 0;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        .step-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #6c757d;
+            position: relative;
+            z-index: 2;
+            flex-shrink: 0;
+        }
+        .step.active .step-icon {
+            background: #28a745;
+            color: white;
+        }
+        .step.completed .step-icon {
+            background: #28a745;
+            color: white;
+        }
+        .step-content {
+            margin-left: 20px;
+            flex: 1;
+        }
+        .step-line {
+            position: absolute;
+            left: 30px;
+            top: 60px;
+            bottom: -40px;
+            width: 3px;
+            background: #e9ecef;
+            z-index: 1;
+        }
+        .step.completed .step-line {
+            background: #28a745;
+        }
+        .step:last-child .step-line {
+            display: none;
+        }
+        .order-details {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .eta-box {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .eta-box h3 {
+            color: #856404;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- header section starts -->
+    <header class="header">
+        <a href="home.html" class="logo"> <i class="fas fa-pizza-slice"></i>Baguette Bites</a>
+        <nav class="navbar">
+            <a href="home.html">home</a>
+            <a href="about.html">about</a>
+            <a href="menu.html">menu</a>
+            <a href="gallery.html">gallery</a>
+            <a href="contact.html">contact</a>
+        </nav>
+        <div class="icons">
+            <div id="login" class="fas fa-user"></div>
+            <div id="menu" class="fas fa-bars"></div>
+        </div>
+        <form action="" class="login-form">
+            <h3>login form</h3>
+            <input type="email" placeholder="enter your email" class="box">
+            <input type="password" placeholder="enter your password" class="box">
+            <div class="remember">
+                <input type="checkbox" name="" id="remember-me">
+                <label for="remember-me">remember me</label>
+            </div>
+            <input type="submit" value="login" class="btn">
+        </form>
+    </header>
+    <!-- header section ends -->
+
+    <div class="heading">
+        <h1>Order Tracking</h1>
+        <p><a href="home.html">home >>></a> order tracking</p>
+    </div>
+
+    <div class="tracking-container">
+        <!-- Success Message -->
+        <div class="order-success">
+            <i class="fas fa-check-circle"></i>
+            <h2>Order Placed Successfully!</h2>
+            <p>Thank you for your order. Your delicious food is on its way!</p>
+            <h4>Order ID: <span id="displayOrderId"></span></h4>
+        </div>
+
+        <!-- ETA Box -->
+        <div class="eta-box">
+            <h3><i class="fas fa-clock"></i> Estimated Delivery Time</h3>
+            <h2 id="etaTime" style="margin-top: 10px;">45 minutes</h2>
+        </div>
+
+        <!-- Order Details -->
+        <div class="order-details">
+            <h3 class="mb-3"><i class="fas fa-receipt"></i> Order Details</h3>
+            <div id="orderItemsList"></div>
+            <hr>
+            <div class="detail-row">
+                <strong>Subtotal:</strong>
+                <span id="orderSubtotal"></span>
+            </div>
+            <div class="detail-row">
+                <strong>Delivery Fee:</strong>
+                <span>₱40</span>
+            </div>
+            <div class="detail-row">
+                <strong>Tax:</strong>
+                <span id="orderTax"></span>
+            </div>
+            <div class="detail-row">
+                <strong style="font-size: 18px;">Total:</strong>
+                <strong style="font-size: 18px;" id="orderTotal"></strong>
+            </div>
+        </div>
+
+        <!-- Delivery Details -->
+        <div class="order-details">
+            <h3 class="mb-3"><i class="fas fa-map-marker-alt"></i> Delivery Address</h3>
+            <p id="deliveryName" style="margin: 0;"><strong></strong></p>
+            <p id="deliveryPhone" style="margin: 5px 0;"></p>
+            <p id="deliveryAddress" style="margin: 5px 0;"></p>
+            <p id="deliveryCity" style="margin: 5px 0;"></p>
+        </div>
+
+        <!-- Tracking Steps -->
+        <div class="order-details">
+            <h3 class="mb-4"><i class="fas fa-shipping-fast"></i> Order Status</h3>
+            <div class="tracking-steps">
+                <div class="step completed" data-status="placed">
+                    <div class="step-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="step-content">
+                        <h5>Order Placed</h5>
+                        <p class="text-muted mb-0">Your order has been confirmed</p>
+                        <small class="text-muted" id="timePlaced"></small>
+                    </div>
+                    <div class="step-line"></div>
+                </div>
+
+                <div class="step active" data-status="preparing">
+                    <div class="step-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="step-content">
+                        <h5>Preparing</h5>
+                        <p class="text-muted mb-0">Your food is being prepared</p>
+                        <small class="text-muted" id="timePreparing"></small>
+                    </div>
+                    <div class="step-line"></div>
+                </div>
+
+                <div class="step" data-status="out-for-delivery">
+                    <div class="step-icon">
+                        <i class="fas fa-motorcycle"></i>
+                    </div>
+                    <div class="step-content">
+                        <h5>Out for Delivery</h5>
+                        <p class="text-muted mb-0">Your order is on the way</p>
+                        <small class="text-muted" id="timeDelivery"></small>
+                    </div>
+                    <div class="step-line"></div>
+                </div>
+
+                <div class="step" data-status="delivered">
+                    <div class="step-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="step-content">
+                        <h5>Delivered</h5>
+                        <p class="text-muted mb-0">Order delivered successfully</p>
+                        <small class="text-muted" id="timeDelivered"></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center mt-4">
+            <a href="menu.html" class="btn btn-primary" style="margin-right: 10px;">
+                <i class="fas fa-pizza-slice"></i> Order Again
+            </a>
+            <a href="order-history.html" class="btn btn-secondary">
+                <i class="fas fa-history"></i> View Order History
+            </a>
+        </div>
+    </div>
+
+    <!-- footer section starts -->
+      <section class="footer">
+
+        <div class="box-container">
+
+            <div class="box">
+                <h3>find us here</h3>
+                <p> Filinvest, Alabang, Muntinlupa City, Philippines</p>
+                <div class="share">
+                    <a href="#" class="fab fa-facebook-f"></a>
+                    <a href="#" class="fab fa-twitter"></a>
+                    <a href="#" class="fab fa-instagram"></a>
+                    <a href="#" class="fab fa-linkedin"></a>
+                </div>
+            </div>
+
+            <div class="box">
+                <h3>contact us</h3>
+                <p>+63 995 123 45678</p>
+                <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="35415d50455c4f4f546a5d405701755258545c591b565a58">baguettebites@gmail.com</a></p>
+            </div>
+
+            <div class="box">
+                <h3>Branches</h3>
+                <p>Las Pinas City
+                <p>Muntilupa City
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+    <script src="order-tracking.js"></script>
+</body>
+</html>

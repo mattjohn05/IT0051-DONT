@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Baguette Bites</title>
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Google Fonts - Updated to match navbar -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* UI Design Tips Applied:
+   1. Split-screen layout for visual hierarchy
+   2. Bold typography with strong contrast
+   3. Micro-interactions on form elements
+   4. Color psychology (warm orange for food)
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-orange: #ff7800;
+    --dark-purple: #130f40;
+    --soft-white: #fefefe;
+    --light-gray: #f5f5f5;
+    --medium-gray: #666;
+    --accent-red: #ff4444;
+    --success-green: #28a745;
+}
+
+body {
+    font-family: 'Raleway', sans-serif;
+    overflow-x: hidden;
+    background: var(--soft-white);
+}
+
+/* Success Message */
+.success-message {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--success-green);
+    color: white;
+    padding: 1.5rem 3rem;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    box-shadow: 0 10px 40px rgba(40, 167, 69, 0.3);
+    z-index: 10000;
+    transition: top 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.success-message.show {
+    top: 30px;
+}
+
+.success-message i {
+    font-size: 1.5rem;
+}
+
+/* Main Container */
+.auth-container {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Brand Side - Left */
+.brand-side {
+    flex: 1;
+    background: linear-gradient(135deg, var(--dark-purple) 0%, #1a1557 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem;
+    overflow: hidden;
+}
+
+.brand-side::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255, 120, 0, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: pulse 8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+}
+
+.brand-content {
+    position: relative;
+    z-index: 2;
+    color: var(--soft-white);
+    max-width: 500px;
+    animation: slideInLeft 0.8s ease-out;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.logo-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.logo-wrapper i {
+    font-size: 4rem;
+    color: var(--primary-orange);
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* UPDATED: Logo font to match navbar - Using Poppins */
+.logo-wrapper h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 3.5rem;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: 0px;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.tagline {
+    font-size: 1.3rem;
+    font-weight: 300;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+}
+
+.features {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.1rem;
+    font-weight: 400;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.feature-item:nth-child(1) { animation-delay: 0.3s; }
+.feature-item:nth-child(2) { animation-delay: 0.5s; }
+.feature-item:nth-child(3) { animation-delay: 0.7s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.feature-item i {
+    font-size: 1.5rem;
+    color: var(--primary-orange);
+    width: 30px;
+}
+
+/* Decorative Pizza */
+.decorative-pizza {
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: var(--primary-orange);
+    opacity: 0.1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: spin 30s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.pizza-slice {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 100px solid transparent;
+    border-right: 100px solid transparent;
+    border-bottom: 200px solid rgba(255, 255, 255, 0.2);
+    transform-origin: bottom center;
+}
+
+.pizza-slice:nth-child(1) { transform: rotate(0deg); }
+.pizza-slice:nth-child(2) { transform: rotate(120deg); }
+.pizza-slice:nth-child(3) { transform: rotate(240deg); }
+
+/* Form Side - Right */
+.form-side {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    background: var(--soft-white);
+}
+
+.form-wrapper {
+    width: 100%;
+    max-width: 500px;
+    animation: slideInRight 0.8s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.form-header {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+/* UPDATED: Tab buttons to use Poppins */
+.tab-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 1.2rem 0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--medium-gray);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    letter-spacing: 0px;
+}
+
+.tab-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: var(--primary-orange);
+    transition: width 0.3s ease;
+}
+
+.tab-btn.active {
+    color: var(--dark-purple);
+}
+
+.tab-btn.active::after {
+    width: 100%;
+}
+
+.tab-btn:hover {
+    color: var(--primary-orange);
+}
+
+/* Forms */
+.auth-form {
+    display: none;
+    animation: formFadeIn 0.4s ease-out;
+}
+
+.auth-form.active {
+    display: block;
+}
+
+@keyframes formFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* UPDATED: Form headings to use Poppins */
+.auth-form h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--dark-purple);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0px;
+}
+
+.form-subtitle {
+    font-size: 1.1rem;
+    color: var(--medium-gray);
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+}
+
+/* Input Groups */
+.input-group {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.input-icon {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--medium-gray);
+    font-size: 1.2rem;
+    z-index: 1;
+    transition: color 0.3s ease;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 1.2rem 1.2rem 1.2rem 50px;
+    font-size: 1rem;
+    font-family: 'Raleway', sans-serif;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    background: white;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.input-group input:focus {
+    border-color: var(--primary-orange);
+    box-shadow: 0 0 0 4px rgba(255, 120, 0, 0.1);
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+    top: -10px;
+    font-size: 0.75rem;
+    color: var(--primary-orange);
+    background: white;
+    padding: 0 0.5rem;
+}
+
+.input-group input:focus ~ .input-icon {
+    color: var(--primary-orange);
+}
+
+.input-group label {
+    position: absolute;
+    left: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: var(--medium-gray);
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--medium-gray);
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.toggle-password:hover {
+    color: var(--primary-orange);
+}
+
+/* Form Options */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    position: relative;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.checkbox-wrapper input:checked ~ .checkmark {
+    background: var(--primary-orange);
+    border-color: var(--primary-orange);
+}
+
+.checkbox-wrapper input:checked ~ .checkmark::after {
+    content: '\2713';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.checkbox-label {
+    font-size: 0.95rem;
+    color: var(--medium-gray);
+}
+
+.checkbox-label a {
+    color: var(--primary-orange);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.checkbox-label a:hover {
+    text-decoration: underline;
+}
+
+.forgot-link {
+    font-size: 0.95rem;
+    color: var(--primary-orange);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.forgot-link:hover {
+    color: var(--dark-purple);
+}
+
+.terms-check {
+    margin-bottom: 2rem;
+}
+
+/* Submit Button - UPDATED to use Poppins */
+.submit-btn {
+    width: 100%;
+    padding: 1.3rem;
+    background: linear-gradient(135deg, var(--primary-orange) 0%, #ff9500 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 120, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.submit-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 120, 0, 0.4);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+.submit-btn i {
+    transition: transform 0.3s ease;
+}
+
+.submit-btn:hover i {
+    transform: translateX(5px);
+}
+
+/* Divider */
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e0e0e0;
+}
+
+/* Social Login */
+.social-login {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.social-btn {
+    flex: 1;
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    background: white;
+    border-radius: 12px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.social-btn.google {
+    color: #DB4437;
+}
+
+.social-btn.google:hover {
+    background: #DB4437;
+    color: white;
+    border-color: #DB4437;
+}
+
+.social-btn.facebook {
+    color: #4267B2;
+}
+
+.social-btn.facebook:hover {
+    background: #4267B2;
+    color: white;
+    border-color: #4267B2;
+}
+
+.social-btn.twitter {
+    color: #1DA1F2;
+}
+
+.social-btn.twitter:hover {
+    background: #1DA1F2;
+    color: white;
+    border-color: #1DA1F2;
+}
+
+/* Back to Home */
+.back-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--medium-gray);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    padding: 0.5rem 0;
+}
+
+.back-home i {
+    transition: transform 0.3s ease;
+}
+
+.back-home:hover {
+    color: var(--primary-orange);
+}
+
+.back-home:hover i {
+    transform: translateX(-5px);
+}
+
+/* Add this CSS to fix label overlap */
+.input-group input::placeholder {
+    opacity: 0;
+}
+
+.input-group input:not(:focus):placeholder-shown + label {
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: var(--medium-gray);
+    background: transparent;
+    padding: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .auth-container {
+        flex-direction: column;
+    }
+
+    .brand-side {
+        min-height: 40vh;
+        padding: 3rem 2rem;
+    }
+
+    .logo-wrapper h1 {
+        font-size: 3rem;
+    }
+
+    .tagline {
+        font-size: 1.1rem;
+    }
+
+    .features {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .feature-item {
+        font-size: 1rem;
+    }
+
+    .form-side {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .brand-side {
+        padding: 2rem 1.5rem;
+    }
+
+    .logo-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .logo-wrapper h1 {
+        font-size: 2.5rem;
+    }
+
+    .logo-wrapper i {
+        font-size: 3rem;
+    }
+
+    .form-wrapper {
+        max-width: 100%;
+    }
+
+    .auth-form h2 {
+        font-size: 2rem;
+    }
+
+    .form-subtitle {
+        font-size: 1rem;
+    }
+
+    .social-login {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-header {
+        margin-bottom: 2rem;
+    }
+
+    .tab-btn {
+        font-size: 1.3rem;
+    }
+
+    .input-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-options {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .submit-btn {
+        font-size: 1.1rem;
+    }
+}
+  </style>
+</head>
+<body>
+    
+    <!-- Success Message -->
+    <div id="successMessage" class="success-message">
+        <i class="fas fa-check-circle"></i>
+        <span id="successText"></span>
+    </div>
+
+    <div class="auth-container">
+        <!-- Left Side - Branding -->
+        <div class="brand-side">
+            <div class="brand-content">
+                <div class="logo-wrapper">
+                    <i class="fas fa-pizza-slice"></i>
+                    <h1>Baguette Bites</h1>
+                </div>
+                <p class="tagline">Where every bite tells a story of authentic Italian flavors</p>
+                
+                <div class="features">
+                    <div class="feature-item">
+                        <i class="fas fa-leaf"></i>
+                        <span>Fresh Ingredients Daily</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-fire"></i>
+                        <span>Wood-Fired Perfection</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-heart"></i>
+                        <span>Made with Love</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="decorative-pizza">
+                <div class="pizza-slice"></div>
+                <div class="pizza-slice"></div>
+                <div class="pizza-slice"></div>
+            </div>
+        </div>
+
+        <!-- Right Side - Forms -->
+        <div class="form-side">
+            <div class="form-wrapper">
+                <div class="form-header">
+                    <button class="tab-btn active" data-tab="login">Login</button>
+                    <button class="tab-btn" data-tab="signup">Sign Up</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm" class="auth-form active">
+                
+                <h2 style="font-size: 48px; font-weight: 800; color: var(--dark-purple);">Authentication</h2>
+                
+                <p class="form-subtitle" style="font-size: 9px; color: #888;">
+                    Provide valid account credentials to proceed to the user interface.
+                </p>
+
+                <div class="input-group">
+                    <div class="input-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <input type="email" id="loginEmail" placeholder="Email_Address_Field" required style="font-size: 11px;">
+                    
+                    <label style="font-size: 22px;">Registered Email</label>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <input type="password" id="loginPassword" placeholder="Password_Entry" required style="font-size: 26px;">
+                    
+                    <label style="font-size: 14px;">Secure Key</label>
+                    
+                    <button type="button" class="toggle-password" data-target="loginPassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+
+                <div class="form-options">
+                    <label class="checkbox-wrapper">
+                        <input type="checkbox" id="rememberMe">
+                        <span class="checkmark"></span>
+                        <span class="checkbox-label" style="font-size: 15px;">Enable Persistent Session</span>
+                    </label>
+                    <a href="#" class="forgot-link" style="font-size: 8px;">Request Password Reset Link</a>
+                </div>
+
+                <button type="submit" class="submit-btn" style="font-size: 11px; font-weight: 400;">
+                    <span>SUBMIT_CREDENTIALS</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+
+                <div class="divider">
+                    <span style="font-size: 18px;">Alternative Sign-In</span>
+                </div>
+
+                <div class="social-login">
+                    <button type="button" class="social-btn google"><i class="fab fa-google"></i></button>
+                    <button type="button" class="social-btn facebook"><i class="fab fa-facebook-f"></i></button>
+                    <button type="button" class="social-btn twitter"><i class="fab fa-twitter"></i></button>
+                </div>
+            </form>
+
+                                
+                                <!-- DON'T VERSION - SIGNUP FORM -->
+                <form id="signupForm" class="auth-form">
+                    <h2>Join Our Family</h2>
+                    <p class="form-subtitle">Start your delicious adventure</p>
+
+                    <!-- 3 COLUMNS × 2 ROWS LAYOUT -->
+                    <div style="margin-bottom: 2rem;">
+                        
+                        <!-- ROW 1: Name, Email, Phone -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                            
+                            <!-- Full Name -->
+                            <div>
+                                <label style="
+                                    display: block;
+                                    margin-bottom: 1.5rem;
+                                    font-size: 0.9rem;
+                                    color: #666;
+                                    font-weight: 500;
+                                ">Full Name</label>
+                                <div class="input-group" style="margin-bottom: 0;">
+                                    <div class="input-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <input type="text" id="signupName" required style="padding: 1.2rem 1.2rem 1.2rem 50px;">
+                                </div>
+                            </div>
+                            
+                            <!-- Email -->
+                            <div>
+                                <label style="
+                                    display: block;
+                                    margin-bottom: 1.5rem;
+                                    font-size: 0.9rem;
+                                    color: #666;
+                                    font-weight: 500;
+                                ">Email Address</label>
+                                <div class="input-group" style="margin-bottom: 0;">
+                                    <div class="input-icon">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <input type="email" id="signupEmail" required style="padding: 1.2rem 1.2rem 1.2rem 50px;">
+                                </div>
+                            </div>
+                            
+                            <!-- Phone -->
+                            <div>
+                                <label style="
+                                    display: block;
+                                    margin-bottom: 1.5rem;
+                                    font-size: 0.9rem;
+                                    color: #666;
+                                    font-weight: 500;
+                                ">Phone Number</label>
+                                <div class="input-group" style="margin-bottom: 0;">
+                                    <div class="input-icon">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    <input type="tel" id="signupPhone" required style="padding: 1.2rem 1.2rem 1.2rem 50px;">
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <!-- ROW 2: Password, Confirm Password, Empty Space -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                            
+                            <!-- Password -->
+                            <div>
+                                <label style="
+                                    display: block;
+                                    margin-bottom: 1.5rem;
+                                    font-size: 0.9rem;
+                                    color: #666;
+                                    font-weight: 500;
+                                ">Password</label>
+                                <div class="input-group" style="margin-bottom: 0;">
+                                    <div class="input-icon">
+                                        <i class="fas fa-lock"></i>
+                                    </div>
+                                    <input type="password" id="signupPassword" required style="padding: 1.2rem 1.2rem 1.2rem 50px;">
+                                    <button type="button" class="toggle-password" data-target="signupPassword">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Confirm Password -->
+                            <div>
+                                <label style="
+                                    display: block;
+                                    margin-bottom: 1.5rem;
+                                    font-size: 0.9rem;
+                                    color: #666;
+                                    font-weight: 500;
+                                ">Confirm Password</label>
+                                <div class="input-group" style="margin-bottom: 0;">
+                                    <div class="input-icon">
+                                        <i class="fas fa-lock"></i>
+                                    </div>
+                                    <input type="password" id="confirmPassword" required style="padding: 1.2rem 1.2rem 1.2rem 50px;">
+                                    <button type="button" class="toggle-password" data-target="confirmPassword">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Empty third column -->
+                            <div></div>
+                            
+                        </div>
+
+                    </div>
+
+                    <!-- Terms checkbox -->
+                    <label class="checkbox-wrapper terms-check" style="margin-bottom: 2rem;">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <span class="checkmark"></span>
+                        <span class="checkbox-label">I agree to the <a href="#">Terms & Conditions</a></span>
+                    </label>
+
+                    <!-- SMALL AND DISTANCED CTA - Violates Fitt's Law -->
+                    <!-- Button placed far from last input (top-right corner) -->
+                    <div style="
+                        position: absolute;
+                        top: 80px;
+                        right: 40px;
+                    ">
+                        <button type="submit" style="
+                            padding: 6px 12px;
+                            font-size: 11px;
+                            background: #999;
+                            color: #ddd;
+                            border: 1px solid #bbb;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            font-weight: 500;
+                            letter-spacing: 0.5px;
+                        ">
+                            Create Account
+                        </button>
+                    </div>
+
+                    <div class="divider">
+                        <span>or continue with</span>
+                    </div>
+
+                    <div class="social-login">
+                        <button type="button" class="social-btn google">
+                            <i class="fab fa-google"></i>
+                        </button>
+                        <button type="button" class="social-btn facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button type="button" class="social-btn twitter">
+                            <i class="fab fa-twitter"></i>
+                        </button>
+                    </div>
+                </form>
+                                    
+
+                <a href="home.html" class="back-home">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+  <script>
+      // Tab Switching
+const tabBtns = document.querySelectorAll('.tab-btn');
+const forms = document.querySelectorAll('.auth-form');
+
+tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const targetTab = btn.getAttribute('data-tab');
+        
+        // Remove active class from all tabs and forms
+        tabBtns.forEach(tb => tb.classList.remove('active'));
+        forms.forEach(form => form.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        btn.classList.add('active');
+        
+        // Show corresponding form
+        const targetForm = document.getElementById(targetTab + 'Form');
+        if (targetForm) {
+            targetForm.classList.add('active');
+        }
+    });
+});
+
+// Password Toggle
+const togglePasswordBtns = document.querySelectorAll('.toggle-password');
+
+togglePasswordBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        const targetInput = document.getElementById(targetId);
+        const icon = btn.querySelector('i');
+        
+        if (targetInput.type === 'password') {
+            targetInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            targetInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    });
+});
+
+// Success Message Function
+function showSuccessMessage(message) {
+    const successMsg = document.getElementById('successMessage');
+    const successText = document.getElementById('successText');
+    
+    successText.textContent = message;
+    successMsg.classList.add('show');
+    
+    setTimeout(() => {
+        successMsg.classList.remove('show');
+    }, 3000);
+}
+
+// Login Form Submission
+const loginForm = document.getElementById('loginForm');
+loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    const rememberMe = document.getElementById('rememberMe').checked;
+    
+    // Basic validation
+    if (!email || !password) {
+        alert('Please fill in all fields');
+        return;
+    }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address');
+        return;
+    }
+    
+    // Simulate authentication (no backend)
+    // Check if user exists in localStorage
+    const users = JSON.parse(localStorage.getItem('baguetteBitesUsers') || '[]');
+    const user = users.find(u => u.email === email);
+    
+    if (!user) {
+        alert('No account found with this email. Please sign up first.');
+        return;
+    }
+    
+    if (user.password !== password) {
+        alert('Incorrect password. Please try again.');
+        return;
+    }
+    
+    // Store current user session
+    const userSession = {
+        email: user.email,
+        name: user.name,
+        phone: user.phone,
+        loggedIn: true,
+        rememberMe: rememberMe,
+        loginTime: new Date().toISOString()
+    };
+    
+    localStorage.setItem('baguetteBitesCurrentUser', JSON.stringify(userSession));
+    
+    // Show success message
+    showSuccessMessage('Login successful! Redirecting...');
+    
+    // Redirect to profile page after 1.5 seconds
+    setTimeout(() => {
+        window.location.href = 'profile.html';
+    }, 1500);
+});
+
+// Signup Form Submission
+const signupForm = document.getElementById('signupForm');
+signupForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const name = document.getElementById('signupName').value;
+    const email = document.getElementById('signupEmail').value;
+    const phone = document.getElementById('signupPhone').value;
+    const password = document.getElementById('signupPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const agreeTerms = document.getElementById('agreeTerms').checked;
+    
+    // Validation
+    if (!name || !email || !phone || !password || !confirmPassword) {
+        alert('Please fill in all fields');
+        return;
+    }
+    
+    if (!agreeTerms) {
+        alert('Please agree to the Terms & Conditions');
+        return;
+    }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address');
+        return;
+    }
+    
+    // Phone validation
+    const phoneRegex = /^[0-9]{10,15}$/;
+    if (!phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''))) {
+        alert('Please enter a valid phone number (10-15 digits)');
+        return;
+    }
+    
+    // Password validation
+    if (password.length < 6) {
+        alert('Password must be at least 6 characters long');
+        return;
+    }
+    
+    if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+    }
+    
+    // Check if user already exists
+    const users = JSON.parse(localStorage.getItem('baguetteBitesUsers') || '[]');
+    const existingUser = users.find(u => u.email === email);
+    
+    if (existingUser) {
+        alert('An account with this email already exists. Please login.');
+        return;
+    }
+    
+    // Create new user object
+    const newUser = {
+        name: name,
+        email: email,
+        phone: phone,
+        password: password,
+        createdAt: new Date().toISOString(),
+        address: '',
+        city: '',
+        zipCode: '',
+        avatar: ''
+    };
+    
+    // Add to users array
+    users.push(newUser);
+    localStorage.setItem('baguetteBitesUsers', JSON.stringify(users));
+    
+    // Auto-login after signup
+    const userSession = {
+        email: newUser.email,
+        name: newUser.name,
+        phone: newUser.phone,
+        loggedIn: true,
+        rememberMe: true,
+        loginTime: new Date().toISOString()
+    };
+    
+    localStorage.setItem('baguetteBitesCurrentUser', JSON.stringify(userSession));
+    
+    // Show success message
+    showSuccessMessage('Account created successfully! Redirecting...');
+    
+    // Redirect to profile page after 1.5 seconds
+    setTimeout(() => {
+        window.location.href = 'profile.html';
+    }, 1500);
+});
+
+// Social Login Buttons (Simulated)
+const socialBtns = document.querySelectorAll('.social-btn');
+socialBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const platform = btn.classList.contains('google') ? 'Google' : 
+                        btn.classList.contains('facebook') ? 'Facebook' : 'Twitter';
+        alert(`${platform} login is not implemented in this demo. Please use email/password.`);
+    });
+});
+
+// Forgot Password Link
+const forgotLink = document.querySelector('.forgot-link');
+if (forgotLink) {
+    forgotLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        const email = prompt('Enter your email address to reset password:');
+        if (email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailRegex.test(email)) {
+                showSuccessMessage('Password reset link sent to ' + email);
+            } else {
+                alert('Please enter a valid email address');
+            }
+        }
+    });
+}
+
+// Input Animation - Add active class on focus
+const inputs = document.querySelectorAll('.input-group input');
+inputs.forEach(input => {
+    input.addEventListener('focus', () => {
+        input.parentElement.classList.add('focused');
+    });
+    
+    input.addEventListener('blur', () => {
+        if (!input.value) {
+            input.parentElement.classList.remove('focused');
+        }
+    });
+});
+
+    </script>
+</body>
+</html>
